@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Full Stack App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #161b22;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 640px;
+      width: 90%;
+      border: 1px solid #30363d;
+    }
+    h1 { color: #58a6ff; margin-bottom: 8px; font-size: 28px; }
+    .subtitle { color: #8b949e; margin-bottom: 30px; font-size: 14px; }
+    .status-box {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .status-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .label { color: #8b949e; font-size: 14px; }
+    .value-ok { color: #3fb950; font-weight: bold; }
+    .value-checking { color: #d29922; }
+    .buttons { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    button {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      border: 1px solid #2ea043;
+    }
+    button:hover { background: #2ea043; }
+    button.secondary { background: #21262d; border-color: #30363d; }
+    button.secondary:hover { background: #30363d; }
+    .result-box {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 80px;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      color: #3fb950;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Full Stack App</h1>
+    <p class="subtitle">Running on AWS EC2 — Amazon Linux 2023 — Docker — Jenkins CI/CD</p>
+
+    <div class="status-box">
+      <div class="status-row">
+        <span class="label">Frontend (Nginx)</span>
+        <span class="value-ok">Running</span>
+      </div>
+      <div class="status-row">
+        <span class="label">Backend (Node.js)</span>
+        <span class="value-checking" id="backendStatus">Checking...</span>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button onclick="checkHealth()">Health Check</button>
+      <button onclick="getItems()">Get Items</button>
+      <button class="secondary" onclick="clearResult()">Clear</button>
+    </div>
+
+    <div class="result-box" id="result">Click a button above to test the API connection...</div>
+  </div>
+
+  <script>
+    const API = 'http://' + window.location.hostname + ':5000';
+
+    async function checkHealth() {
+      document.getElementById('result').textContent = 'Calling ' + API + '/api/health ...';
+      try {
+        const res = await fetch(API + '/api/health');
+        const data = await res.json();
+        document.getElementById('backendStatus').className = 'value-ok';
+        document.getElementById('backendStatus').textContent = 'Online';
+        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('backendStatus').textContent = 'Offline';
+        document.getElementById('result').textContent = 'Error: ' + err.message;
+      }
+    }
+
+    async function getItems() {
+      document.getElementById('result').textContent = 'Calling ' + API + '/api/items ...';
+      try {
+        const res = await fetch(API + '/api/items');
+        const data = await res.json();
+        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('result').textContent = 'Error: ' + err.message;
+      }
+    }
+
+    function clearResult() {
+      document.getElementById('result').textContent = 'Cleared.';
+    }
+
+    checkHealth();
+  </script>
+</body>
+</html>
