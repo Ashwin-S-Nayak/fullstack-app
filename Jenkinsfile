@@ -2,10 +2,6 @@ pipeline {
 
     agent any
 
-    environment {
-        APP_DIR = '/home/ec2-user/fullstack-app'
-    }
-
     stages {
 
         stage('Checkout') {
@@ -18,40 +14,28 @@ pipeline {
         stage('Build Images') {
             steps {
                 echo '>>> STAGE 2: Building Docker images...'
-                sh '''
-                    cd /home/ec2-user/fullstack-app
-                    docker compose build --no-cache
-                '''
+                sh 'docker compose build --no-cache'
             }
         }
 
         stage('Test') {
             steps {
                 echo '>>> STAGE 3: Running tests...'
-                sh '''
-                    cd /home/ec2-user/fullstack-app
-                    docker compose run --rm backend npm test
-                '''
+                sh 'docker compose run --rm backend npm test'
             }
         }
 
         stage('Stop Old Containers') {
             steps {
                 echo '>>> STAGE 4: Stopping old containers...'
-                sh '''
-                    cd /home/ec2-user/fullstack-app
-                    docker compose down || true
-                '''
+                sh 'docker compose down || true'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo '>>> STAGE 5: Deploying new containers...'
-                sh '''
-                    cd /home/ec2-user/fullstack-app
-                    docker compose up -d
-                '''
+                sh 'docker compose up -d'
             }
         }
 
@@ -59,13 +43,10 @@ pipeline {
             steps {
                 echo '>>> STAGE 6: Verifying deployment...'
                 sh '''
-                    echo "Waiting 10 seconds for containers to fully start..."
                     sleep 10
-                    echo "Testing backend health endpoint:"
                     curl -f http://localhost:5000/api/health
                     echo ""
-                    echo "All running containers:"
-                    docker compose -f /home/ec2-user/fullstack-app/docker-compose.yml ps
+                    docker compose ps
                 '''
             }
         }
