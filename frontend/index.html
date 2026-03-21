@@ -3,89 +3,188 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Full Stack App</title>
+  <title>My Full Stack App v2</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background: #0d1117;
-      color: #c9d1d9;
+      background: #0f2027;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .container {
-      background: #161b22;
-      padding: 40px;
-      border-radius: 12px;
-      max-width: 640px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      padding: 48px;
+      border-radius: 20px;
+      max-width: 680px;
       width: 90%;
-      border: 1px solid #30363d;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
     }
-    h1 { color: #58a6ff; margin-bottom: 8px; font-size: 28px; }
-    .subtitle { color: #8b949e; margin-bottom: 30px; font-size: 14px; }
-    .status-box {
-      background: #0d1117;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 24px;
+    .badge {
+      display: inline-block;
+      background: #00d4aa;
+      color: #000;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
     }
-    .status-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-    .label { color: #8b949e; font-size: 14px; }
-    .value-ok { color: #3fb950; font-weight: bold; }
-    .value-checking { color: #d29922; }
+    h1 {
+      color: #ffffff;
+      font-size: 36px;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    h1 span { color: #00d4aa; }
+    .subtitle {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .stack-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .tag {
+      background: rgba(0,212,170,0.1);
+      color: #00d4aa;
+      border: 1px solid rgba(0,212,170,0.3);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .status-panel {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+    }
+    .status-item:last-child { border-bottom: none; }
+    .dot-green {
+      width: 8px; height: 8px;
+      background: #00d4aa;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      box-shadow: 0 0 6px #00d4aa;
+    }
+    .dot-yellow {
+      width: 8px; height: 8px;
+      background: #f59e0b;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    .status-value { color: #fff; font-weight: bold; }
     .buttons { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
     button {
-      background: #238636;
-      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
       border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
       cursor: pointer;
       font-size: 14px;
-      border: 1px solid #2ea043;
+      font-weight: bold;
+      transition: all 0.2s;
     }
-    button:hover { background: #2ea043; }
-    button.secondary { background: #21262d; border-color: #30363d; }
-    button.secondary:hover { background: #30363d; }
+    .btn-primary {
+      background: #00d4aa;
+      color: #000;
+    }
+    .btn-primary:hover { background: #00b894; transform: translateY(-1px); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.15); }
     .result-box {
-      background: #0d1117;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      padding: 16px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 20px;
       min-height: 80px;
       font-family: monospace;
       font-size: 13px;
       white-space: pre-wrap;
-      color: #3fb950;
+      color: #00d4aa;
+      line-height: 1.6;
+    }
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.2);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>My Full Stack App</h1>
-    <p class="subtitle">Running on AWS EC2 — Amazon Linux 2023 — Docker — Jenkins CI/CD</p>
+    <div class="badge">✦ AUTO DEPLOYED BY JENKINS</div>
+    <h1>Full Stack App <span>v2.0</span></h1>
+    <p class="subtitle">
+      This version was deployed automatically by Jenkins CI/CD.<br>
+      No manual SSH. No manual commands. Just a git push.
+    </p>
 
-    <div class="status-box">
-      <div class="status-row">
-        <span class="label">Frontend (Nginx)</span>
-        <span class="value-ok">Running</span>
+    <div class="stack-row">
+      <span class="tag">Amazon Linux</span>
+      <span class="tag">Docker</span>
+      <span class="tag">Jenkins CI/CD</span>
+      <span class="tag">Node.js</span>
+      <span class="tag">MongoDB</span>
+      <span class="tag">Nginx</span>
+    </div>
+
+    <div class="status-panel">
+      <div class="status-item">
+        <span><span class="dot-green"></span>Frontend</span>
+        <span class="status-value">Running on Nginx</span>
       </div>
-      <div class="status-row">
-        <span class="label">Backend (Node.js)</span>
-        <span class="value-checking" id="backendStatus">Checking...</span>
+      <div class="status-item">
+        <span><span id="backendDot" class="dot-yellow"></span>Backend</span>
+        <span class="status-value" id="backendStatus">Checking...</span>
+      </div>
+      <div class="status-item">
+        <span><span class="dot-green"></span>Database</span>
+        <span class="status-value">MongoDB Running</span>
+      </div>
+      <div class="status-item">
+        <span><span class="dot-green"></span>Pipeline</span>
+        <span class="status-value">Jenkins — Last run SUCCESS</span>
       </div>
     </div>
 
     <div class="buttons">
-      <button onclick="checkHealth()">Health Check</button>
-      <button onclick="getItems()">Get Items</button>
-      <button class="secondary" onclick="clearResult()">Clear</button>
+      <button class="btn-primary" onclick="checkHealth()">Health Check</button>
+      <button class="btn-primary" onclick="getItems()">Get Items</button>
+      <button class="btn-secondary" onclick="clearResult()">Clear</button>
     </div>
 
-    <div class="result-box" id="result">Click a button above to test the API connection...</div>
+    <div class="result-box" id="result">Click a button to test your API...</div>
+
+    <div class="footer">
+      Deployed on AWS EC2 t2.micro — Free Tier
+    </div>
   </div>
 
   <script>
@@ -96,10 +195,11 @@
       try {
         const res = await fetch(API + '/api/health');
         const data = await res.json();
-        document.getElementById('backendStatus').className = 'value-ok';
+        document.getElementById('backendDot').className = 'dot-green';
         document.getElementById('backendStatus').textContent = 'Online';
         document.getElementById('result').textContent = JSON.stringify(data, null, 2);
       } catch (err) {
+        document.getElementById('backendDot').className = 'dot-yellow';
         document.getElementById('backendStatus').textContent = 'Offline';
         document.getElementById('result').textContent = 'Error: ' + err.message;
       }
