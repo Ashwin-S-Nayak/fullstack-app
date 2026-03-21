@@ -43,9 +43,12 @@ pipeline {
             steps {
                 echo '>>> STAGE 6: Verifying deployment...'
                 sh '''
-                    sleep 10
-                    curl -f http://localhost:5000/api/health
+                    echo "Waiting 15 seconds for containers to fully start..."
+                    sleep 15
+                    echo "Testing backend health endpoint..."
+                    curl -f http://172.17.0.1:5000/api/health
                     echo ""
+                    echo "All running containers:"
                     docker compose ps
                 '''
             }
