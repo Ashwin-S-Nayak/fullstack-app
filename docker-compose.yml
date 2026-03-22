@@ -1,4 +1,3 @@
-
 services:
 
   backend:
@@ -10,6 +9,8 @@ services:
       - NODE_ENV=production
       - PORT=5000
       - MONGODB_URI=mongodb://mongodb:27017/fullstackdb
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRE=7d
     depends_on:
       - mongodb
     restart: unless-stopped

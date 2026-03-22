@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const itemSchema = new mongoose.Schema(
   {
@@ -18,11 +18,16 @@ const itemSchema = new mongoose.Schema(
       type: String,
       enum: ['active', 'pending', 'done'],
       default: 'active'
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     }
   },
   {
     timestamps: true
   }
-);
+)
 
-module.exports = mongoose.model('Item', itemSchema);
+module.exports = mongoose.model('Item', itemSchema)

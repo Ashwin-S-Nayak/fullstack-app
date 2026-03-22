@@ -2,6 +2,10 @@ pipeline {
 
     agent any
 
+    environment {
+        JWT_SECRET = credentials('jwt-secret')
+    }
+
     stages {
 
         stage('Checkout') {
@@ -20,10 +24,11 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo '>>> STAGE 3: Running real Jest tests...'
+                echo '>>> STAGE 3: Running Jest tests...'
                 sh '''
                     docker compose run --rm \
                       -e MONGODB_URI=mongodb://mongodb:27017/fullstackdb_test \
+                      -e JWT_SECRET=test_secret_for_jest \
                       backend npm test
                 '''
             }
@@ -40,7 +45,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo '>>> STAGE 5: Deploying new containers...'
-                sh 'docker compose up -d --force-recreate'
+                sh 'JWT_SECRET=${JWT_SECRET} docker compose up -d --force-recreate'
             }
         }
 
@@ -48,12 +53,9 @@ pipeline {
             steps {
                 echo '>>> STAGE 6: Verifying deployment...'
                 sh '''
-                    echo "Waiting 15 seconds for MongoDB and backend to start..."
                     sleep 15
-                    echo "Testing backend health + database connection:"
                     curl -f http://172.17.0.1:5000/api/health
                     echo ""
-                    echo "All running containers:"
                     docker compose ps
                 '''
             }
