@@ -20,22 +20,27 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo '>>> STAGE 3: Running tests...'
-                sh 'docker compose run --rm backend npm test'
+                echo '>>> STAGE 3: Running real Jest tests...'
+                sh '''
+                    docker compose run --rm \
+                      -e MONGODB_URI=mongodb://mongodb:27017/fullstackdb_test \
+                      backend npm test
+                '''
             }
         }
 
         stage('Stop Old Containers') {
             steps {
                 echo '>>> STAGE 4: Stopping old containers...'
-                sh 'docker compose down || true'
+                sh 'docker compose down --remove-orphans || true'
+                sh 'docker rm -f mongodb backend frontend || true'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo '>>> STAGE 5: Deploying new containers...'
-                sh 'docker compose up -d'
+                sh 'docker compose up -d --force-recreate'
             }
         }
 
@@ -43,9 +48,9 @@ pipeline {
             steps {
                 echo '>>> STAGE 6: Verifying deployment...'
                 sh '''
-                    echo "Waiting 15 seconds for containers to fully start..."
+                    echo "Waiting 15 seconds for MongoDB and backend to start..."
                     sleep 15
-                    echo "Testing backend health endpoint..."
+                    echo "Testing backend health + database connection:"
                     curl -f http://172.17.0.1:5000/api/health
                     echo ""
                     echo "All running containers:"

@@ -3,224 +3,348 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Full Stack App v2</title>
+  <title>Full Stack App — Live Data</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background: #0f2027;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      background: #0f1117;
+      color: #e6edf3;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 32px 16px;
     }
-    .container {
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(10px);
-      padding: 48px;
-      border-radius: 20px;
-      max-width: 680px;
-      width: 90%;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    .header {
+      max-width: 800px;
+      margin: 0 auto 32px;
     }
     .badge {
       display: inline-block;
-      background: #00d4aa;
-      color: #000;
+      background: #238636;
+      color: #fff;
       font-size: 11px;
       font-weight: bold;
-      padding: 4px 12px;
+      padding: 3px 10px;
       border-radius: 20px;
-      margin-bottom: 20px;
-      letter-spacing: 1px;
+      margin-bottom: 12px;
     }
-    h1 {
-      color: #ffffff;
-      font-size: 36px;
-      margin-bottom: 10px;
-      line-height: 1.2;
-    }
-    h1 span { color: #00d4aa; }
-    .subtitle {
-      color: rgba(255,255,255,0.5);
-      font-size: 14px;
-      margin-bottom: 32px;
-      line-height: 1.6;
-    }
-    .stack-row {
+    h1 { font-size: 32px; color: #58a6ff; margin-bottom: 6px; }
+    .subtitle { color: #8b949e; font-size: 14px; margin-bottom: 20px; }
+    .status-bar {
       display: flex;
-      gap: 10px;
+      gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 32px;
+      margin-bottom: 8px;
     }
-    .tag {
-      background: rgba(0,212,170,0.1);
-      color: #00d4aa;
-      border: 1px solid rgba(0,212,170,0.3);
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #161b22;
+      border: 1px solid #30363d;
       padding: 6px 14px;
-      border-radius: 6px;
+      border-radius: 20px;
       font-size: 13px;
     }
-    .status-panel {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.08);
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-green { background: #3fb950; box-shadow: 0 0 6px #3fb950; }
+    .dot-yellow { background: #d29922; }
+    .dot-red { background: #f85149; }
+    .main { max-width: 800px; margin: 0 auto; }
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
       border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 28px;
+      padding: 24px;
+      margin-bottom: 24px;
     }
-    .status-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+    .card h2 { font-size: 16px; color: #e6edf3; margin-bottom: 20px; border-bottom: 1px solid #30363d; padding-bottom: 12px; }
+    .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    input[type="text"], select, textarea {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      padding: 10px 14px;
+      border-radius: 8px;
       font-size: 14px;
-      color: rgba(255,255,255,0.6);
+      outline: none;
+      transition: border-color 0.2s;
     }
-    .status-item:last-child { border-bottom: none; }
-    .dot-green {
-      width: 8px; height: 8px;
-      background: #00d4aa;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 8px;
-      box-shadow: 0 0 6px #00d4aa;
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: #58a6ff;
     }
-    .dot-yellow {
-      width: 8px; height: 8px;
-      background: #f59e0b;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 8px;
-    }
-    .status-value { color: #fff; font-weight: bold; }
-    .buttons { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    button {
-      padding: 12px 24px;
+    input[type="text"].name-input { flex: 1; min-width: 200px; }
+    input[type="text"].desc-input { flex: 2; min-width: 200px; }
+    select { min-width: 120px; }
+    .btn {
+      padding: 10px 20px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
       font-size: 14px;
       font-weight: bold;
-      transition: all 0.2s;
+      transition: all 0.15s;
     }
-    .btn-primary {
-      background: #00d4aa;
-      color: #000;
-    }
-    .btn-primary:hover { background: #00b894; transform: translateY(-1px); }
-    .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    .btn-secondary:hover { background: rgba(255,255,255,0.15); }
-    .result-box {
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.08);
+    .btn-green { background: #238636; color: #fff; border: 1px solid #2ea043; }
+    .btn-green:hover { background: #2ea043; }
+    .btn-blue { background: #1f6feb; color: #fff; }
+    .btn-blue:hover { background: #388bfd; }
+    .btn-red { background: #da3633; color: #fff; }
+    .btn-red:hover { background: #f85149; }
+    .btn-ghost { background: transparent; color: #8b949e; border: 1px solid #30363d; }
+    .btn-ghost:hover { background: #21262d; color: #e6edf3; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .items-list { display: flex; flex-direction: column; gap: 12px; }
+    .item-card {
+      background: #0d1117;
+      border: 1px solid #30363d;
       border-radius: 10px;
-      padding: 20px;
-      min-height: 80px;
-      font-family: monospace;
-      font-size: 13px;
-      white-space: pre-wrap;
-      color: #00d4aa;
-      line-height: 1.6;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.2s;
     }
-    .footer {
-      margin-top: 24px;
-      text-align: center;
+    .item-card:hover { border-color: #58a6ff; }
+    .item-info { flex: 1; }
+    .item-name { font-size: 15px; font-weight: bold; color: #e6edf3; margin-bottom: 4px; }
+    .item-desc { font-size: 13px; color: #8b949e; margin-bottom: 6px; }
+    .item-meta { font-size: 12px; color: #6e7681; }
+    .status-badge {
+      padding: 3px 10px;
+      border-radius: 20px;
       font-size: 12px;
-      color: rgba(255,255,255,0.2);
+      font-weight: bold;
+    }
+    .status-active { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid rgba(63,185,80,0.3); }
+    .status-pending { background: rgba(210,153,34,0.15); color: #d29922; border: 1px solid rgba(210,153,34,0.3); }
+    .status-done { background: rgba(88,166,255,0.15); color: #58a6ff; border: 1px solid rgba(58,166,255,0.3); }
+    .item-actions { display: flex; gap: 8px; }
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: #6e7681;
+    }
+    .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast-success { background: #238636; color: #fff; }
+    .toast-error { background: #da3633; color: #fff; }
+    .loading { text-align: center; padding: 32px; color: #8b949e; }
+    .count-badge {
+      background: #30363d;
+      color: #8b949e;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-left: 8px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="badge">✦ AUTO DEPLOYED BY JENKINS</div>
-    <h1>Full Stack App <span>v2.0</span></h1>
-    <p class="subtitle">
-      This version was deployed automatically by Jenkins CI/CD.<br>
-      No manual SSH. No manual commands. Just a git push.
-    </p>
 
-    <div class="stack-row">
-      <span class="tag">Amazon Linux</span>
-      <span class="tag">Docker</span>
-      <span class="tag">Jenkins CI/CD</span>
-      <span class="tag">Node.js</span>
-      <span class="tag">MongoDB</span>
-      <span class="tag">Nginx</span>
-    </div>
-
-    <div class="status-panel">
-      <div class="status-item">
-        <span><span class="dot-green"></span>Frontend</span>
-        <span class="status-value">Running on Nginx</span>
+  <div class="header">
+    <div class="badge">✦ DEPLOYED BY JENKINS CI/CD</div>
+    <h1>Full Stack App</h1>
+    <p class="subtitle">Real data from MongoDB — Add, update, and delete items live</p>
+    <div class="status-bar">
+      <div class="status-pill">
+        <div class="dot dot-green"></div>
+        <span>Frontend — Nginx</span>
       </div>
-      <div class="status-item">
-        <span><span id="backendDot" class="dot-yellow"></span>Backend</span>
-        <span class="status-value" id="backendStatus">Checking...</span>
+      <div class="status-pill">
+        <div class="dot" id="backendDot" style="background:#d29922"></div>
+        <span>Backend — <span id="backendText">Checking...</span></span>
       </div>
-      <div class="status-item">
-        <span><span class="dot-green"></span>Database</span>
-        <span class="status-value">MongoDB Running</span>
+      <div class="status-pill">
+        <div class="dot" id="dbDot" style="background:#d29922"></div>
+        <span>MongoDB — <span id="dbText">Checking...</span></span>
       </div>
-      <div class="status-item">
-        <span><span class="dot-green"></span>Pipeline</span>
-        <span class="status-value">Jenkins — Last run SUCCESS</span>
-      </div>
-    </div>
-
-    <div class="buttons">
-      <button class="btn-primary" onclick="checkHealth()">Health Check</button>
-      <button class="btn-primary" onclick="getItems()">Get Items</button>
-      <button class="btn-secondary" onclick="clearResult()">Clear</button>
-    </div>
-
-    <div class="result-box" id="result">Click a button to test your API...</div>
-
-    <div class="footer">
-      Deployed on AWS EC2 t2.micro — Free Tier
     </div>
   </div>
+
+  <div class="main">
+
+    <!-- ADD ITEM FORM -->
+    <div class="card">
+      <h2>Add New Item</h2>
+      <div class="form-row">
+        <input type="text" class="name-input" id="itemName" placeholder="Item name (required)" maxlength="100">
+        <input type="text" class="desc-input" id="itemDesc" placeholder="Description (optional)" maxlength="500">
+        <select id="itemStatus">
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="done">Done</option>
+        </select>
+        <button class="btn btn-green" id="addBtn" onclick="addItem()">Add Item</button>
+      </div>
+    </div>
+
+    <!-- ITEMS LIST -->
+    <div class="card">
+      <h2>
+        All Items
+        <span class="count-badge" id="itemCount">0</span>
+      </h2>
+      <div class="items-list" id="itemsList">
+        <div class="loading">Loading items from MongoDB...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
 
   <script>
     const API = 'http://' + window.location.hostname + ':5000';
 
-    async function checkHealth() {
-      document.getElementById('result').textContent = 'Calling ' + API + '/api/health ...';
+    // ── STATUS CHECK ──────────────────────────────────────────────
+    async function checkStatus() {
       try {
         const res = await fetch(API + '/api/health');
         const data = await res.json();
-        document.getElementById('backendDot').className = 'dot-green';
-        document.getElementById('backendStatus').textContent = 'Online';
-        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        document.getElementById('backendDot').style.background = '#3fb950';
+        document.getElementById('backendText').textContent = 'Online';
+        if (data.database === 'connected') {
+          document.getElementById('dbDot').style.background = '#3fb950';
+          document.getElementById('dbText').textContent = 'Connected';
+        } else {
+          document.getElementById('dbDot').style.background = '#d29922';
+          document.getElementById('dbText').textContent = 'Disconnected';
+        }
       } catch (err) {
-        document.getElementById('backendDot').className = 'dot-yellow';
-        document.getElementById('backendStatus').textContent = 'Offline';
-        document.getElementById('result').textContent = 'Error: ' + err.message;
+        document.getElementById('backendDot').style.background = '#f85149';
+        document.getElementById('backendText').textContent = 'Offline';
       }
     }
 
-    async function getItems() {
-      document.getElementById('result').textContent = 'Calling ' + API + '/api/items ...';
+    // ── LOAD ALL ITEMS ────────────────────────────────────────────
+    async function loadItems() {
       try {
         const res = await fetch(API + '/api/items');
         const data = await res.json();
-        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        const list = document.getElementById('itemsList');
+        const countBadge = document.getElementById('itemCount');
+        countBadge.textContent = data.count || 0;
+        if (!data.items || data.items.length === 0) {
+          list.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No items yet. Add your first item above!</p></div>';
+          return;
+        }
+        list.innerHTML = data.items.map(item => `
+          <div class="item-card" id="card-${item._id}">
+            <div class="item-info">
+              <div class="item-name">${escapeHtml(item.name)}</div>
+              ${item.description ? `<div class="item-desc">${escapeHtml(item.description)}</div>` : ''}
+              <div class="item-meta">Created: ${new Date(item.createdAt).toLocaleString()}</div>
+            </div>
+            <select class="status-badge status-${item.status}" onchange="updateStatus('${item._id}', this.value)" style="background:transparent;border:none;cursor:pointer;font-weight:bold;font-size:12px;">
+              <option value="active" ${item.status==='active'?'selected':''}>Active</option>
+              <option value="pending" ${item.status==='pending'?'selected':''}>Pending</option>
+              <option value="done" ${item.status==='done'?'selected':''}>Done</option>
+            </select>
+            <div class="item-actions">
+              <button class="btn btn-red" onclick="deleteItem('${item._id}', '${escapeHtml(item.name)}')">Delete</button>
+            </div>
+          </div>
+        `).join('');
       } catch (err) {
-        document.getElementById('result').textContent = 'Error: ' + err.message;
+        document.getElementById('itemsList').innerHTML = '<div class="empty-state"><p style="color:#f85149">Error loading items: ' + err.message + '</p></div>';
       }
     }
 
-    function clearResult() {
-      document.getElementById('result').textContent = 'Cleared.';
+    // ── ADD ITEM ──────────────────────────────────────────────────
+    async function addItem() {
+      const name = document.getElementById('itemName').value.trim();
+      const description = document.getElementById('itemDesc').value.trim();
+      const status = document.getElementById('itemStatus').value;
+      if (!name) { showToast('Name is required', 'error'); document.getElementById('itemName').focus(); return; }
+      const btn = document.getElementById('addBtn');
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+      try {
+        const res = await fetch(API + '/api/items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, description, status })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        document.getElementById('itemName').value = '';
+        document.getElementById('itemDesc').value = '';
+        document.getElementById('itemStatus').value = 'active';
+        showToast('Item added successfully!', 'success');
+        await loadItems();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Add Item';
+      }
     }
 
-    checkHealth();
+    // ── UPDATE STATUS ─────────────────────────────────────────────
+    async function updateStatus(id, status) {
+      try {
+        const res = await fetch(API + '/api/items/' + id, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        if (!res.ok) throw new Error('Update failed');
+        showToast('Status updated!', 'success');
+        await loadItems();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ── DELETE ITEM ───────────────────────────────────────────────
+    async function deleteItem(id, name) {
+      if (!confirm('Delete "' + name + '"? This cannot be undone.')) return;
+      try {
+        const res = await fetch(API + '/api/items/' + id, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        showToast('Item deleted!', 'success');
+        await loadItems();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ── HELPERS ───────────────────────────────────────────────────
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+    }
+
+    let toastTimer;
+    function showToast(msg, type) {
+      clearTimeout(toastTimer);
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast toast-' + type + ' show';
+      toastTimer = setTimeout(() => { t.className = 'toast'; }, 3000);
+    }
+
+    // ── INIT ──────────────────────────────────────────────────────
+    checkStatus();
+    loadItems();
+
+    // Press Enter in name field to submit
+    document.getElementById('itemName').addEventListener('keypress', e => {
+      if (e.key === 'Enter') addItem();
+    });
   </script>
 </body>
 </html>

@@ -6,6 +6,12 @@ services:
     container_name: backend
     ports:
       - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/fullstackdb
+    depends_on:
+      - mongodb
     restart: unless-stopped
     networks:
       - app-network
